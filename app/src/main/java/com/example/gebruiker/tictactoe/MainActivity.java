@@ -14,6 +14,8 @@ import android.widget.TextView;
 
 import java.io.Serializable;
 
+// Created by Steven Schoenmaker (10777679)
+
 public class MainActivity extends AppCompatActivity {
 
     int[][] board = new int[3][3];
