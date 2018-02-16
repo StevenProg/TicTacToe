@@ -1,5 +1,6 @@
 package com.example.gebruiker.tictactoe;
 
+import android.annotation.SuppressLint;
 import android.graphics.drawable.Drawable;
 import android.media.Image;
 import android.support.v7.app.AppCompatActivity;
@@ -66,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
         But_Reset = findViewById(R.id.button);
         text = findViewById(R.id.textView2);
         movesPlayed = 0;
+
         if (savedInstanceState != null) {
             but_0.setImageResource(savedInstanceState.getInt("but_0"));
             but_1.setImageResource(savedInstanceState.getInt("but_1"));
@@ -99,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
         outState.putInt("movesPlayed", movesPlayed);
 
     }
-
+    // creates 3 by 3 playing board
     public void tileClicked(View view) {
         int id = view.getId();
         int row = 0;
@@ -112,8 +114,10 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
+
+        // imageButtons which get pressed will be changed based on player's turn
         Tile tile = game.draw(row, column);
-        if (Winner == false) {
+        if (!Winner) {
             ImageButton current_view = (ImageButton) view;
             switch (tile) {
                 case CROSS:
@@ -132,8 +136,10 @@ public class MainActivity extends AppCompatActivity {
                     break;
             }
         }
+
+        // win messages
         Winner = winCheck(play_board);
-        if (Winner == true && GameOver == false) {
+        if (Winner && !GameOver) {
             GameOver = true;
             switch (tile) {
                 case CROSS:
@@ -144,12 +150,13 @@ public class MainActivity extends AppCompatActivity {
                     break;
             }
         }
-        if (movesPlayed > 8 && Winner == false) {
+        if (movesPlayed > 8 && !Winner) {
             text.setText("Game is a draw!");
         }
     }
 
 
+    // win conditions (any 3 tiles in a row(horizontal, vertical and diagonal))
     public boolean winCheck(Tile[][] board) {
         for (int i = 0; i < 3; i++) {
             if (board[i][0].equals(board[i][1]) && board[i][0].equals(board[i][2]) && !board[i][0].equals(Tile.BLANK) ) {
@@ -173,8 +180,10 @@ public class MainActivity extends AppCompatActivity {
         return false;
     }
 
+    @SuppressLint("SetTextI18n")
     public void resetClicked(View view) {
 
+        // resets all game parameters
         game = new Game();
         but_0.setImageResource(R.drawable.background);
         but_0.setTag(R.drawable.background);
@@ -214,8 +223,8 @@ public class MainActivity extends AppCompatActivity {
         final private int BOARD_SIZE = 3;
         private Boolean playerOneTurn;  // true if player 1's turn, false if player 2's turn
 
-
-        public Game() {
+        // initiates blank playing field
+        Game() {
             play_board = new Tile[BOARD_SIZE][BOARD_SIZE];
             for (int i = 0; i < BOARD_SIZE; i++)
                 for (int j = 0; j < BOARD_SIZE; j++)
@@ -224,13 +233,14 @@ public class MainActivity extends AppCompatActivity {
             playerOneTurn = true;
         }
 
-        public Tile draw(int row, int column) {
-            if (play_board[row][column] == Tile.BLANK && playerOneTurn == true && GameOver == false) {
+        // based on player's turn the tile will be given a value, and the player turn will switch
+        Tile draw(int row, int column) {
+            if (play_board[row][column] == Tile.BLANK && playerOneTurn && !GameOver) {
                 playerOneTurn = false;
                 movesPlayed = movesPlayed + 1;
                 play_board[row][column] = Tile.CROSS;
 
-            } else if (play_board[row][column] == Tile.BLANK && playerOneTurn == false && GameOver == false) {
+            } else if (play_board[row][column] == Tile.BLANK && !playerOneTurn && !GameOver) {
                 playerOneTurn = true;
                 movesPlayed = movesPlayed + 1;
                 play_board[row][column] = Tile.CIRCLE;
